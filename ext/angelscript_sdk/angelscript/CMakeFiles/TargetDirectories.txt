@@ -1,0 +1,2 @@
+/home/patryk/Development/Libraries/angelscript/angelscript/CMakeFiles/Angelscript.dir
+/home/patryk/Development/Libraries/angelscript/angelscript/game/CMakeFiles/game.dir

@@ -21,11 +21,11 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-//#include <Box2D/Dynamics/b2Fixture.h>
+#include <Box2D/Dynamics/b2Fixture.h>
 
 #include "Utils.h"
 //#include "Defs.h"
-/*
+
 #define DECLARE_BINARY_SAVE(T) template void T::save<eos::portable_oarchive>	\
 	(eos::portable_oarchive& ar, const unsigned int version) const;
 
@@ -48,7 +48,7 @@
 	template void T::serialize<boost::archive::polymorphic_iarchive>					\
 		(boost::archive::polymorphic_iarchive& ar, const unsigned int version);
 
-*/
+
 namespace boost {
 	namespace serialization {
 
@@ -133,7 +133,174 @@ inline void serialize(Archive& ar, sf::Vertex& v, const unsigned int version)
 	ar & BOOST_SERIALIZATION_NVP(v.color);
 }
 
-}	// namespace serialization
-}	// namespace boost
+template <class Archive>
+inline void serialize(Archive& ar, b2Vec2& v, const unsigned int version)
+{
+	ar & BOOST_SERIALIZATION_NVP(v.x);
+	ar & BOOST_SERIALIZATION_NVP(v.y);
+}
+
+// Serialization Shape Base
+template <class Archive>
+inline void serialize(Archive& ar, b2Shape& s, const unsigned int version)
+{
+	ar & BOOST_SERIALIZATION_NVP(s.m_type);
+	ar & BOOST_SERIALIZATION_NVP(s.m_radius);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2CircleShape& s, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2Shape>(s);
+
+	ar & BOOST_SERIALIZATION_NVP(s.m_p);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2ChainShape& s, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2Shape>(s);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2EdgeShape& s, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2Shape>(s);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2PolygonShape& s, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2Shape>(s);
+}
+
+// Serialization Collision Filter
+template <class Archive>
+inline void serialize(Archive& ar, b2Filter& f, const unsigned int version)
+{
+	ar & BOOST_SERIALIZATION_NVP(f.categoryBits);
+	ar & BOOST_SERIALIZATION_NVP(f.maskBits);
+	ar & BOOST_SERIALIZATION_NVP(f.groupIndex);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2BodyDef& b, const unsigned int version)
+{
+	ar & BOOST_SERIALIZATION_NVP(b.active);
+	ar & BOOST_SERIALIZATION_NVP(b.allowSleep);
+	ar & BOOST_SERIALIZATION_NVP(b.angle);
+	ar & BOOST_SERIALIZATION_NVP(b.angularDamping);
+	ar & BOOST_SERIALIZATION_NVP(b.angularVelocity);
+	ar & BOOST_SERIALIZATION_NVP(b.awake);
+	ar & BOOST_SERIALIZATION_NVP(b.bullet);
+	ar & BOOST_SERIALIZATION_NVP(b.fixedRotation);
+	ar & BOOST_SERIALIZATION_NVP(b.gravityScale);
+	ar & BOOST_SERIALIZATION_NVP(b.linearDamping);
+	ar & BOOST_SERIALIZATION_NVP(b.linearVelocity);
+	ar & BOOST_SERIALIZATION_NVP(b.position);
+	ar & BOOST_SERIALIZATION_NVP(b.type);
+}
+
+// Serialization FixtureDef
+template <class Archive>
+inline void serialize(Archive& ar, b2FixtureDef& f, const unsigned int version)
+{
+	ar & BOOST_SERIALIZATION_NVP(f.friction);
+	ar & BOOST_SERIALIZATION_NVP(f.restitution);
+	ar & BOOST_SERIALIZATION_NVP(f.density);
+	ar & BOOST_SERIALIZATION_NVP(f.isSensor);
+	ar & BOOST_SERIALIZATION_NVP(f.filter);
+}
+
+// Serialization Joints Defs
+template <class Archive>
+inline void serialize(Archive& ar, b2JointDef& j, const unsigned int version)
+{
+	ar & BOOST_SERIALIZATION_NVP(j.collideConnected);
+	ar & BOOST_SERIALIZATION_NVP(j.type);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2RevoluteJointDef& j, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2JointDef>(j);
+
+	ar & BOOST_SERIALIZATION_NVP(j.enableLimit);
+	ar & BOOST_SERIALIZATION_NVP(j.enableMotor);
+	ar & BOOST_SERIALIZATION_NVP(j.localAnchorA);
+	ar & BOOST_SERIALIZATION_NVP(j.localAnchorB);
+	ar & BOOST_SERIALIZATION_NVP(j.lowerAngle);
+	ar & BOOST_SERIALIZATION_NVP(j.maxMotorTorque);
+	ar & BOOST_SERIALIZATION_NVP(j.motorSpeed);
+	ar & BOOST_SERIALIZATION_NVP(j.referenceAngle);
+	ar & BOOST_SERIALIZATION_NVP(j.upperAngle);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2DistanceJointDef& j, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2JointDef>(j);
+
+	ar & BOOST_SERIALIZATION_NVP(j.localAnchorA);
+	ar & BOOST_SERIALIZATION_NVP(j.localAnchorB);
+	ar & BOOST_SERIALIZATION_NVP(j.length);
+	ar & BOOST_SERIALIZATION_NVP(j.frequencyHz);
+	ar & BOOST_SERIALIZATION_NVP(j.dampingRatio);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2PrismaticJointDef& j, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2JointDef>(j);
+
+	ar & BOOST_SERIALIZATION_NVP(j.localAnchorA);
+	ar & BOOST_SERIALIZATION_NVP(j.localAnchorB);
+	ar & BOOST_SERIALIZATION_NVP(j.localAxisA);
+	ar & BOOST_SERIALIZATION_NVP(j.referenceAngle);
+	ar & BOOST_SERIALIZATION_NVP(j.enableLimit);
+	ar & BOOST_SERIALIZATION_NVP(j.enableMotor);
+	ar & BOOST_SERIALIZATION_NVP(j.lowerTranslation);
+	ar & BOOST_SERIALIZATION_NVP(j.upperTranslation);
+	ar & BOOST_SERIALIZATION_NVP(j.motorSpeed);
+	ar & BOOST_SERIALIZATION_NVP(j.maxMotorForce);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2WheelJointDef& j, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2JointDef>(j);
+
+	ar & BOOST_SERIALIZATION_NVP(j.localAnchorA);
+	ar & BOOST_SERIALIZATION_NVP(j.localAnchorB);
+	ar & BOOST_SERIALIZATION_NVP(j.localAxisA);
+	ar & BOOST_SERIALIZATION_NVP(j.enableMotor);
+	ar & BOOST_SERIALIZATION_NVP(j.maxMotorTorque);
+	ar & BOOST_SERIALIZATION_NVP(j.motorSpeed);
+	ar & BOOST_SERIALIZATION_NVP(j.frequencyHz);
+	ar & BOOST_SERIALIZATION_NVP(j.dampingRatio);
+}
+
+template <class Archive>
+inline void serialize(Archive& ar, b2MotorJointDef& j, const unsigned int version)
+{
+	ar & boost::serialization::base_object<b2JointDef>(j);
+
+	ar & BOOST_SERIALIZATION_NVP(j.linearOffset);
+	ar & BOOST_SERIALIZATION_NVP(j.angularOffset);
+	ar & BOOST_SERIALIZATION_NVP(j.maxForce);
+	ar & BOOST_SERIALIZATION_NVP(j.maxTorque);
+	ar & BOOST_SERIALIZATION_NVP(j.correctionFactor);
+}
+
+// Serialization BoundingBox
+template <class Archive>
+inline void serialize(Archive& ar, b2AABB& f, const unsigned int version)
+{
+	ar & BOOST_SERIALIZATION_NVP(f.lowerBound.x) & BOOST_SERIALIZATION_NVP(f.lowerBound.y);
+	ar & BOOST_SERIALIZATION_NVP(f.upperBound.x) & BOOST_SERIALIZATION_NVP(f.upperBound.y);
+}
+
+} // namespace serialization
+} // namespace boost
 
 #endif

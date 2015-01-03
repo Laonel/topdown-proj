@@ -3,6 +3,8 @@
 #include "Utils.h"
 #include "Filesystem/Serialization.h"
 
+#include <boost/intrusive/list.hpp>
+
 #include <angelscript.h>
 
 int main()

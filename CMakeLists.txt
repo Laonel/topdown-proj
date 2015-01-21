@@ -45,14 +45,15 @@ set(LIBS ${LIBS} ${AngelScript_LIBRARY})
 
 enable_testing()
 
-add_executable(TopDown src/main.cpp
-					   src/Utils.cpp
+add_executable(TopDown src/Utils.cpp
 					   src/Math/Math.cpp
 					   src/Math/Vector2.cpp
 					   src/Math/Vector3.cpp
 					   src/Math/Matrix3.cpp
 					   src/Math/Matrix4.cpp
-					   src/Math/Quaternion.cpp)
+					   src/Math/Quaternion.cpp
+					   src/Filesystem/Assets/Asset.cpp
+					   src/main.cpp)
 
 target_link_libraries(TopDown ${LIBS})
 

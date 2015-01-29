@@ -6,7 +6,7 @@
 
 bool init(const std::string& config);
 
-bool isInit() const;
+bool isInit();
 
 void handleEvent();
 

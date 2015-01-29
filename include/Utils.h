@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cmath>
 
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -45,6 +46,8 @@
 #define DELETE_ARRAY(a)	{ if (a) { delete[] a; a = 0; } }
 
 #define PTR_TYPEID(ptr) typeid(*ptr)
+
+extern bool SCENE_DEBUG;
 
 //! Typedefs for integer types
 typedef int32_t int32;

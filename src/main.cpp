@@ -3,8 +3,6 @@
 #include "Utils.h"
 #include "Filesystem/Serialization.h"
 
-#include "Filesystem/Assets/Asset.h"
-
 #include <angelscript.h>
 
 #include <cstdio>

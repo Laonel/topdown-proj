@@ -52,7 +52,10 @@ add_executable(TopDown src/Utils.cpp
 					   src/Math/Matrix3.cpp
 					   src/Math/Matrix4.cpp
 					   src/Math/Quaternion.cpp
-					   src/Filesystem/Assets/Asset.cpp
+					   src/Filesystem/Assets/AssetBase.cpp
+					   src/Scene/Component.cpp
+					   src/Scene/GameObject.cpp
+					   src/Scene/Scene.cpp
 					   src/main.cpp)
 
 target_link_libraries(TopDown ${LIBS})

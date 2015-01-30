@@ -81,12 +81,12 @@ private:
 		Component::OnBuildComponentCallback builder;
 	};
 
-	static std::map<std::string, ComponentFactoryData> m_componentFactory;
+	static std::map<std::string, ComponentFactoryData> s_componentFactory;
 
-	static GameObject::List m_prefabs;
-	static GameObject::List m_gameObjects;
-	static GameObject::List m_gameObjectsToCreate;
-	static GameObject::List m_gameObjectsToDestroy;
+	static GameObject::List s_prefabs;
+	static GameObject::List s_gameObjects;
+	static GameObject::List s_gameObjectsToCreate;
+	static GameObject::List s_gameObjectsToDestroy;
 
 	static std::string s_sceneFileExtension;
 

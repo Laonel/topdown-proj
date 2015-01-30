@@ -3,41 +3,41 @@
 
 bool SCENE_DEBUG = true;
 
-std::map<std::string, Scene::ComponentFactoryData> Scene::m_componentFactory;
+std::map<std::string, Scene::ComponentFactoryData> Scene::s_componentFactory;
 
-GameObject::List Scene::m_prefabs;
-GameObject::List Scene::m_gameObjects;
-GameObject::List Scene::m_gameObjectsToCreate;
-GameObject::List Scene::m_gameObjectsToDestroy;
+GameObject::List Scene::s_prefabs;
+GameObject::List Scene::s_gameObjects;
+GameObject::List Scene::s_gameObjectsToCreate;
+GameObject::List Scene::s_gameObjectsToDestroy;
 
 std::string Scene::s_sceneFileExtension = ".scn";
 
 void Scene::registerComponentFactory(const std::string& id, std::type_index type, Component::OnBuildComponentCallback builder)
 {
-	if (id.empty() || m_componentFactory.count(id) || !builder)
+	if (id.empty() || s_componentFactory.count(id) || !builder)
 		return;
 
 	ComponentFactoryData d;
 	d.type = type;
 	d.builder = builder;
-	m_componentFactory[id] = d;
+	s_componentFactory[id] = d;
 }
 
 void Scene::unregisterComponentFactory(const std::string& id)
 {
-	if (m_componentFactory.count(id))
-		m_componentFactory.erase(id);
+	if (s_componentFactory.count(id))
+		s_componentFactory.erase(id);
 }
 
 void Scene::unregisterComponentFactory(std::type_index type)
 {
-	for (std::map<std::string, ComponentFactoryData>::iterator it = m_componentFactory.begin();
-		it != m_componentFactory.end();
+	for (std::map<std::string, ComponentFactoryData>::iterator it = s_componentFactory.begin();
+		it != s_componentFactory.end();
 		++it)
 	{
 		if (it->second.type == type)
 		{
-			m_componentFactory.erase(it);
+			s_componentFactory.erase(it);
 			return;
 		}
 	}
@@ -45,13 +45,13 @@ void Scene::unregisterComponentFactory(std::type_index type)
 
 void Scene::unregisterComponentFactory(Component::OnBuildComponentCallback builder)
 {
-	for (std::map<std::string, ComponentFactoryData>::iterator it = m_componentFactory.begin();
-		it != m_componentFactory.end();
+	for (std::map<std::string, ComponentFactoryData>::iterator it = s_componentFactory.begin();
+		it != s_componentFactory.end();
 		++it)
 	{
 		if (it->second.builder == builder)
 		{
-			m_componentFactory.erase(it);
+			s_componentFactory.erase(it);
 			return;
 		}
 	}
@@ -59,21 +59,21 @@ void Scene::unregisterComponentFactory(Component::OnBuildComponentCallback build
 
 void Scene::unregisterAllComponentFactories()
 {
-	m_componentFactory.clear();
+	s_componentFactory.clear();
 }
 
 std::type_index* Scene::findComponentFactoryType(const std::string& id)
 {
-	if (m_componentFactory.count(id))
-		return &(m_componentFactory[id].type);
+	if (s_componentFactory.count(id))
+		return &(s_componentFactory[id].type);
 
 	return 0;
 }
 
 std::type_index* Scene::findComponentFactoryType(Component::OnBuildComponentCallback builder)
 {
-	for (std::map<std::string, ComponentFactoryData>::iterator it = m_componentFactory.begin();
-		it != m_componentFactory.end();
+	for (std::map<std::string, ComponentFactoryData>::iterator it = s_componentFactory.begin();
+		it != s_componentFactory.end();
 		++it)
 		if (it->second.builder == builder)
 			return &(it->second.type);
@@ -83,8 +83,8 @@ std::type_index* Scene::findComponentFactoryType(Component::OnBuildComponentCall
 
 std::string Scene::findComponentFactoryId(std::type_index type)
 {
-	for (std::map<std::string, ComponentFactoryData>::iterator it = m_componentFactory.begin();
-		it != m_componentFactory.end();
+	for (std::map<std::string, ComponentFactoryData>::iterator it = s_componentFactory.begin();
+		it != s_componentFactory.end();
 		++it)
 		if (it->second.type == type)
 			return it->first;
@@ -94,8 +94,8 @@ std::string Scene::findComponentFactoryId(std::type_index type)
 
 std::string Scene::findComponentFactoryId(Component::OnBuildComponentCallback builder)
 {
-	for (std::map<std::string, ComponentFactoryData>::iterator it = m_componentFactory.begin();
-		it != m_componentFactory.end();
+	for (std::map<std::string, ComponentFactoryData>::iterator it = s_componentFactory.begin();
+		it != s_componentFactory.end();
 		++it)
 		if (it->second.builder == builder)
 			return it->first;
@@ -105,16 +105,16 @@ std::string Scene::findComponentFactoryId(Component::OnBuildComponentCallback bu
 
 Component::OnBuildComponentCallback Scene::findComponentFactoryBuilder(const std::string& id)
 {
-	if (m_componentFactory.count(id))
-		return m_componentFactory[id].builder;
+	if (s_componentFactory.count(id))
+		return s_componentFactory[id].builder;
 
 	return 0;
 }
 
 Component::OnBuildComponentCallback Scene::findComponentFactoryBuilder(std::type_index type)
 {
-	for (std::map<std::string, ComponentFactoryData>::iterator it = m_componentFactory.begin();
-		it != m_componentFactory.end();
+	for (std::map<std::string, ComponentFactoryData>::iterator it = s_componentFactory.begin();
+		it != s_componentFactory.end();
 		++it)
 		if (it->second.type == type)
 			return it->second.builder;
@@ -124,16 +124,16 @@ Component::OnBuildComponentCallback Scene::findComponentFactoryBuilder(std::type
 
 Component* Scene::buildComponent(const std::string& id)
 {
-	if (m_componentFactory.count(id))
-		return m_componentFactory[id].builder();
+	if (s_componentFactory.count(id))
+		return s_componentFactory[id].builder();
 
 	return 0;
 }
 
 Component* Scene::buildComponent(std::type_index type)
 {
-	for (std::map<std::string, ComponentFactoryData>::iterator it = m_componentFactory.begin();
-		it != m_componentFactory.end();
+	for (std::map<std::string, ComponentFactoryData>::iterator it = s_componentFactory.begin();
+		it != s_componentFactory.end();
 		++it)
 		if (it->second.type == type)
 			return it->second.builder();
@@ -162,13 +162,13 @@ void Scene::shutdown()
 	processRemoving();
 
 	GameObject* obj;
-	for (GameObject::List::iterator it = m_gameObjectsToCreate.begin(); it != m_gameObjectsToCreate.end(); ++it)
+	for (GameObject::List::iterator it = s_gameObjectsToCreate.begin(); it != s_gameObjectsToCreate.end(); ++it)
 	{
 		obj = *it;
 		DELETE_OBJECT(obj);
 	}
 
-	m_gameObjectsToCreate.clear();
+	s_gameObjectsToCreate.clear();
 	
 	unregisterAllComponentFactories();
 }
@@ -201,25 +201,25 @@ bool Scene::saveScene(const std::string& path)
 		//ar << secureKey;
 
 		// save prefabs to the archive
-		uint32 prefabsCount = m_prefabs.size();
+		uint32 prefabsCount = s_prefabs.size();
 		ar << prefabsCount;
 
 		GameObject* go;
-		for (GameObject::List::iterator it = m_prefabs.begin(); it != m_prefabs.end(); it++)
+		for (GameObject::List::iterator it = s_prefabs.begin(); it != s_prefabs.end(); it++)
 		{
 			go = (*it);
 			ar << go;
 		}
 
 		// save gameobjects to the archive
-		uint32 goCount = m_gameObjects.size() + m_gameObjectsToCreate.size();
+		uint32 goCount = s_gameObjects.size() + s_gameObjectsToCreate.size();
 		ar << goCount;
-		for (GameObject::List::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
+		for (GameObject::List::iterator it = s_gameObjects.begin(); it != s_gameObjects.end(); it++)
 		{
 			go = (*it);
 			ar << go;
 		}
-		for (GameObject::List::iterator it = m_gameObjectsToCreate.begin(); it != m_gameObjectsToCreate.end(); it++)
+		for (GameObject::List::iterator it = s_gameObjectsToCreate.begin(); it != s_gameObjectsToCreate.end(); it++)
 		{
 			go = (*it);
 			ar << go;
@@ -312,7 +312,7 @@ bool Scene::addGameObject(GameObject* obj, bool prefab)
 	if (!obj || (typeid(obj) != typeid(GameObject*)) || hasGameObject(obj, prefab) || isWaitingToAdd(obj))
 		return false;
 
-	GameObject::List& cgo = prefab ? m_prefabs : m_gameObjectsToCreate;
+	GameObject::List& cgo = prefab ? s_prefabs : s_gameObjectsToCreate;
 	cgo.push_back(obj);
 
 	obj->setPrefab(prefab);
@@ -337,13 +337,13 @@ void Scene::removeGameObject(GameObject* obj, bool prefab)
 
 	if (prefab)
 	{
-		m_prefabs.remove(obj);
+		s_prefabs.remove(obj);
 		obj->setPrefab(false);
 		DELETE_OBJECT(obj);
 	}
 	else
 	{
-		m_gameObjectsToDestroy.push_back(obj);
+		s_gameObjectsToDestroy.push_back(obj);
 		if (!prefab)
 		{
 			obj->setDestroying(true);
@@ -363,13 +363,13 @@ void Scene::removeGameObject(const std::string& id, bool prefab)
 
 	if (prefab)
 	{
-		m_prefabs.remove(o);
+		s_prefabs.remove(o);
 		o->setPrefab(false);
 		DELETE_OBJECT(o);
 	}
 	else
 	{
-		m_gameObjectsToDestroy.push_back(o);
+		s_gameObjectsToDestroy.push_back(o);
 		if (!prefab)
 		{
 			o->setDestroying(true);
@@ -383,7 +383,7 @@ void Scene::removeAllGameObjects(bool prefab)
 	GameObject* obj;
 	if (prefab)
 	{
-		for (GameObject::List::iterator it = m_prefabs.begin(); it != m_prefabs.end(); it++)
+		for (GameObject::List::iterator it = s_prefabs.begin(); it != s_prefabs.end(); it++)
 		{
 			obj = *it;
 			obj->setPrefab(false);
@@ -391,14 +391,14 @@ void Scene::removeAllGameObjects(bool prefab)
 			IF_PRINT_DEBUG(SCENE_DEBUG) << "Removed game object: " << obj->getId() << std::endl;
 		}
 
-		m_prefabs.clear();
+		s_prefabs.clear();
 	}
 	else
 	{
-		for (GameObject::List::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
+		for (GameObject::List::iterator it = s_gameObjects.begin(); it != s_gameObjects.end(); it++)
 		{
 			obj = *it;
-			m_gameObjectsToDestroy.push_back(obj);
+			s_gameObjectsToDestroy.push_back(obj);
 			obj->setDestroying(true);
 			obj->onDestroy();
 			IF_PRINT_DEBUG(SCENE_DEBUG) << "Removed game object: " << obj->getId() << std::endl;
@@ -410,7 +410,7 @@ bool Scene::hasGameObject(GameObject* obj, bool prefab)
 {
 	if (prefab)
 	{
-		for (GameObject::List::iterator it = m_prefabs.begin(); it != m_prefabs.end(); it++)
+		for (GameObject::List::iterator it = s_prefabs.begin(); it != s_prefabs.end(); it++)
 		{
 			if ((*it)->getId() == obj->getId())
 				return true;
@@ -418,7 +418,7 @@ bool Scene::hasGameObject(GameObject* obj, bool prefab)
 	}
 	else
 	{
-		for (GameObject::List::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
+		for (GameObject::List::iterator it = s_gameObjects.begin(); it != s_gameObjects.end(); it++)
 		{
 			if ((*it)->getId() == obj->getId())
 				return true;
@@ -432,7 +432,7 @@ bool Scene::hasGameObject(const std::string& id, bool prefab)
 {
 	if (prefab)
 	{
-		for (GameObject::List::iterator it = m_prefabs.begin(); it != m_prefabs.end(); it++)
+		for (GameObject::List::iterator it = s_prefabs.begin(); it != s_prefabs.end(); it++)
 		{
 			if ((*it)->getId() == id)
 				return true;
@@ -440,7 +440,7 @@ bool Scene::hasGameObject(const std::string& id, bool prefab)
 	}
 	else
 	{
-		for (GameObject::List::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
+		for (GameObject::List::iterator it = s_gameObjects.begin(); it != s_gameObjects.end(); it++)
 		{
 			if ((*it)->getId() == id)
 				return true;
@@ -454,7 +454,7 @@ GameObject* Scene::getGameObject(const std::string& id, bool prefab)
 {
 	if (prefab)
 	{
-		for (GameObject::List::iterator it = m_prefabs.begin(); it != m_prefabs.end(); it++)
+		for (GameObject::List::iterator it = s_prefabs.begin(); it != s_prefabs.end(); it++)
 		{
 			if ((*it)->getId() == id)
 				return *it;
@@ -462,7 +462,7 @@ GameObject* Scene::getGameObject(const std::string& id, bool prefab)
 	}
 	else
 	{
-		for (GameObject::List::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
+		for (GameObject::List::iterator it = s_gameObjects.begin(); it != s_gameObjects.end(); it++)
 		{
 			if ((*it)->getId() == id)
 				return *it;
@@ -501,7 +501,7 @@ GameObject* Scene::findGameObject(const std::string& path)
 
 uint32 Scene::getGameObjectCount(bool prefab)
 {
-	return prefab ? m_prefabs.size() : m_gameObjects.size();
+	return prefab ? s_prefabs.size() : s_gameObjects.size();
 }
 
 GameObject* Scene::instantiatePrefab(const std::string& id)
@@ -521,9 +521,9 @@ void Scene::processUpdate(const sf::Time& dt, bool sort)
 	processRemoving();
 
 	if (sort)
-		m_gameObjects.sort([](GameObject* a, GameObject* b)->bool { return a->getOrder() < b->getOrder(); });
+		s_gameObjects.sort([](GameObject* a, GameObject* b)->bool { return a->getOrder() < b->getOrder(); });
 
-	for (GameObject::List::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
+	for (GameObject::List::iterator it = s_gameObjects.begin(); it != s_gameObjects.end(); it++)
 		(*it)->onUpdate(dt, sf::Transform::Identity, sort);
 }
 
@@ -541,7 +541,7 @@ void Scene::processRender(sf::RenderTarget* target)
 	target->setView(target->getDefaultView());
 	sf::RenderTarget*& currentTarget = target;
 
-	for (GameObject::List::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
+	for (GameObject::List::iterator it = s_gameObjects.begin(); it != s_gameObjects.end(); it++)
 		(*it)->onRender(currentTarget);
 
 	target->setView(target->getDefaultView());
@@ -553,7 +553,7 @@ void Scene::processRender(sf::RenderTarget* target)
 
 void Scene::processEvents(const sf::Event& event)
 {
-	for (GameObject::List::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
+	for (GameObject::List::iterator it = s_gameObjects.begin(); it != s_gameObjects.end(); it++)
 		(*it)->onEvent(event);
 }
 
@@ -561,20 +561,20 @@ void Scene::processAdding()
 {
 	GameObject* o;
 
-	for (GameObject::List::iterator it = m_gameObjectsToCreate.begin(); it != m_gameObjectsToCreate.end(); it++)
+	for (GameObject::List::iterator it = s_gameObjectsToCreate.begin(); it != s_gameObjectsToCreate.end(); it++)
 	{
 		if ((*it))
 		{
 			o = *it;
-			m_gameObjects.push_back(o);
+			s_gameObjects.push_back(o);
 			o->onCreate();
 		}
 	}
 
-	if (m_gameObjectsToCreate.size() != 0)
+	if (s_gameObjectsToCreate.size() != 0)
 	{
-		IF_PRINT_DEBUG(SCENE_DEBUG) << "added " << m_gameObjectsToCreate.size() << " objects to scene" << std::endl;
-		m_gameObjectsToCreate.clear();
+		IF_PRINT_DEBUG(SCENE_DEBUG) << "added " << s_gameObjectsToCreate.size() << " objects to scene" << std::endl;
+		s_gameObjectsToCreate.clear();
 	}
 }
 
@@ -582,29 +582,29 @@ void Scene::processRemoving()
 {
 	GameObject* o;
 
-	for (GameObject::List::iterator it = m_gameObjectsToDestroy.begin(); it != m_gameObjectsToDestroy.end(); it++)
+	for (GameObject::List::iterator it = s_gameObjectsToDestroy.begin(); it != s_gameObjectsToDestroy.end(); it++)
 	{
 		if ((*it))
 		{
 			o = *it;
-			if (std::find(m_gameObjects.begin(), m_gameObjects.end(), o) == m_gameObjects.end())
+			if (std::find(s_gameObjects.begin(), s_gameObjects.end(), o) == s_gameObjects.end())
 				continue;
-			m_gameObjects.remove(o);
+			s_gameObjects.remove(o);
 			o->setPrefab(false);
 			DELETE_OBJECT(o);
 		}
 	}
 
-	if (m_gameObjectsToDestroy.size() != 0)
+	if (s_gameObjectsToDestroy.size() != 0)
 	{
-		IF_PRINT_DEBUG(SCENE_DEBUG) << "removed " << m_gameObjectsToDestroy.size() << " objects from scene" << std::endl;
-		m_gameObjectsToDestroy.clear();
+		IF_PRINT_DEBUG(SCENE_DEBUG) << "removed " << s_gameObjectsToDestroy.size() << " objects from scene" << std::endl;
+		s_gameObjectsToDestroy.clear();
 	}
 }
 
 bool Scene::isWaitingToAdd(GameObject* obj)
 {
-	for (GameObject::List::iterator it = m_gameObjectsToCreate.begin(); it != m_gameObjectsToCreate.end(); it++)
+	for (GameObject::List::iterator it = s_gameObjectsToCreate.begin(); it != s_gameObjectsToCreate.end(); it++)
 	{
 		if ((*it)->getId() == obj->getId())
 			return true;
@@ -615,7 +615,7 @@ bool Scene::isWaitingToAdd(GameObject* obj)
 
 bool Scene::isWaitingToRemove(GameObject* obj)
 {
-	for (GameObject::List::iterator it = m_gameObjectsToDestroy.begin(); it != m_gameObjectsToDestroy.end(); it++)
+	for (GameObject::List::iterator it = s_gameObjectsToDestroy.begin(); it != s_gameObjectsToDestroy.end(); it++)
 	{
 		if ((*it)->getId() == obj->getId())
 			return true;

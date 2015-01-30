@@ -4,18 +4,32 @@
 #include "Utils.h"
 #include "Math/Math.h"
 
-bool init(const std::string& config);
+class Core
+{
+public:
 
-bool isInit();
+	static bool init();
 
-void handleEvent();
+	static bool isInit();
 
-void update(const sf::Time& dt);
+	static void handleEvent();
 
-void draw();
+	static void update(const sf::Time& dt);
 
-void shutdown();
+	static void draw();
 
-void applyConfig();
+	static void shutdown();
+
+	static bool createWindow() {}
+
+	static void destroyWindow() {}
+
+	static void applyConfig();
+
+private:
+
+	static bool s_initialised;
+
+};
 
 #endif

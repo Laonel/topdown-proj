@@ -24,7 +24,7 @@ if(Boost_FOUND)
 endif()
 
 # Link SFML library
-find_package(SFML COMPONENTS graphics window system)
+find_package(SFML COMPONENTS graphics window system audio)
 include_directories(${SFML_INCLUDE_DIR})
 set(LIBS ${LIBS} ${SFML_LIBRARIES})
 
@@ -52,10 +52,11 @@ add_executable(TopDown src/Utils.cpp
 					   src/Math/Matrix3.cpp
 					   src/Math/Matrix4.cpp
 					   src/Math/Quaternion.cpp
-					   src/Filesystem/Assets/AssetBase.cpp
+					   src/Filesystem/Assets/AssetManager.cpp
 					   src/Scene/Component.cpp
 					   src/Scene/GameObject.cpp
 					   src/Scene/Scene.cpp
+					   src/Core.cpp
 					   src/main.cpp)
 
 target_link_libraries(TopDown ${LIBS})

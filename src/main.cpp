@@ -1,34 +1,20 @@
-#include <SFML/Graphics.hpp>
-
 #include "Utils.h"
-#include "Filesystem/Serialization.h"
-
-#include <angelscript.h>
+#include "Core.h"
 
 #include <cstdio>
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-    for (int i = 1000; i == 1; --i)
-        printf("%d\n", i);
-    
-    // SFML test
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+    // read config file before calling init() function
+    ConfigFile cfgFile;
+    cfgFile.readConfig("../assets/config.cfg");
+    Configuration::parseConfig(&cfgFile);
 
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
+    Core::init();
+
+    VideoManager::createWindow();
+
+    Core::shutdown();
 
     return 0;
 }

@@ -24,6 +24,11 @@ void AssetManager::init()
 	s_defaultTexture->create(1, 1);
 }
 
+void AssetManager::shutdown()
+{
+	DELETE_OBJECT(s_defaultTexture)
+}
+
 sf::Image* AssetManager::addImage(const std::string& id, const sf::Image* ptr)
 {
 	sf::Image* i = getImage(id);

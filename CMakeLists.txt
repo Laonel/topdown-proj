@@ -53,9 +53,19 @@ add_executable(TopDown src/Utils.cpp
 					   src/Math/Matrix4.cpp
 					   src/Math/Quaternion.cpp
 					   src/Filesystem/Assets/AssetManager.cpp
+					   src/Filesystem/ConfigFile.cpp
+					   src/Filesystem/Configuration.cpp
+					   src/Physics/PhysicsManager.cpp
+					   src/Video/VideoManager.cpp
 					   src/Scene/Component.cpp
 					   src/Scene/GameObject.cpp
 					   src/Scene/Scene.cpp
+					   src/Scene/Material.cpp
+					   src/Scene/Components/Transform.cpp
+					   src/Scene/Components/Rendering/SpriteRenderer.cpp
+					   src/Scene/Components/Rendering/Camera.cpp
+					   src/Scene/Components/Physics/Body.cpp
+					   src/Scene/Components/Physics/RevoluteJoint.cpp
 					   src/Core.cpp
 					   src/main.cpp)
 

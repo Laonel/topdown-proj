@@ -7,6 +7,12 @@
 
 #include "Filesystem/Archive.h"
 
+#include "Scene/Components/Transform.h"
+#include "Scene/Components/Rendering/Camera.h"
+#include "Scene/Components/Rendering/SpriteRenderer.h"
+#include "Scene/Components/Physics/Body.h"
+#include "Scene/Components/Physics/RevoluteJoint.h"
+
 class Scene
 {
 public:

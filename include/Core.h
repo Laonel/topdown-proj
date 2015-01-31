@@ -4,11 +4,24 @@
 #include "Utils.h"
 #include "Math/Math.h"
 
+#include "Filesystem/Assets/AssetManager.h"
+#include "Filesystem/ConfigFile.h"
+#include "Filesystem/Configuration.h"
+#include "Filesystem/Serialization.h"
+
+#include "Scene/Scene.h"
+
+#include "Physics/PhysicsManager.h"
+
+#include "Video/VideoManager.h"
+
 class Core
 {
 public:
 
 	static bool init();
+
+	static void shutdown();
 
 	static bool isInit();
 
@@ -17,14 +30,6 @@ public:
 	static void update(const sf::Time& dt);
 
 	static void draw();
-
-	static void shutdown();
-
-	static bool createWindow() {}
-
-	static void destroyWindow() {}
-
-	static void applyConfig();
 
 private:
 

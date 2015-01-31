@@ -17,6 +17,8 @@ public:
 
 	static void init();
 
+	static void shutdown();
+
 	static sf::Image* addImage(const std::string& id, const sf::Image* ptr);
 	static sf::Texture* addTexture(const std::string& id, const sf::Texture* ptr);
 	static sf::Font* addFont(const std::string& id, const sf::Font* ptr);

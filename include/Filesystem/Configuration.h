@@ -1,7 +1,7 @@
 #ifndef _CONFIGURATION_H_
 #define _CONFIGURATION_H_
 
-#include "Filesystem/ConfigFile.h"
+class ConfigFile;
 
 class Configuration
 {
@@ -9,7 +9,9 @@ public:
 
 	static void parseConfig(ConfigFile* cfg);
 
-	static struct General
+	static void applyConfig();
+
+	struct General
 	{
 		static int Colors;
 		static bool Fullscreen;
@@ -18,7 +20,7 @@ public:
 		static bool TestMode;
 	};
 
-	static struct Video
+	struct Video
 	{
 		static int Antialiasing;
 		static int DepthBuffer;

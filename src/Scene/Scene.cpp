@@ -142,14 +142,14 @@ Component* Scene::buildComponent(std::type_index type)
 }
 
 bool Scene::init()
-{/*
+{
 	registerComponentFactory("Transform", typeid(Transform), Transform::onBuildComponent);
 	registerComponentFactory("SpriteRenderer", typeid(SpriteRenderer), SpriteRenderer::onBuildComponent);
-	registerComponentFactory("Script", typeid(Script), Script::onBuildComponent);
-	registerComponentFactory("Camera", typeid(Camera), Camera::onBuildComponent);
+	//registerComponentFactory("Script", typeid(Script), Script::onBuildComponent);
+	//registerComponentFactory("Camera", typeid(Camera), Camera::onBuildComponent);
 	registerComponentFactory("Body", typeid(Body), Body::onBuildComponent);
 	registerComponentFactory("RevoluteJoint", typeid(RevoluteJoint), RevoluteJoint::onBuildComponent);
-	registerComponentFactory("PrismaticJoint", typeid(PrismaticJoint), PrismaticJoint::onBuildComponent);
+	/*registerComponentFactory("PrismaticJoint", typeid(PrismaticJoint), PrismaticJoint::onBuildComponent);
 	registerComponentFactory("DistanceJoint", typeid(DistanceJoint), DistanceJoint::onBuildComponent);
 	registerComponentFactory("Tilemap", typeid(Tilemap), Tilemap::onBuildComponent);
 */

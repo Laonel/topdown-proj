@@ -21,7 +21,7 @@ bool VideoManager::createWindow()
 {
 	if (s_wnd)
 	{
-		PRINT_ERROR << "Window is already created. Destroy it first." << std::endl;
+		PRINT_ERROR << "Window is already created." << std::endl;
 		return false;
 	}
 
@@ -75,4 +75,14 @@ bool VideoManager::isWindowOpen()
 		return false;
 
 	return s_wnd->isOpen();
+}
+
+void VideoManager::display()
+{
+	s_wnd->display();
+}
+
+void VideoManager::clear(const sf::Color& c)
+{
+	s_wnd->clear(c);
 }

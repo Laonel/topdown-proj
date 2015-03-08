@@ -14,6 +14,15 @@ int main()
 
     VideoManager::createWindow();
 
+    while (!Core::shouldQuit())
+    {
+        Core::handleEvent();
+
+        VideoManager::clear();
+        
+        VideoManager::display();
+    }
+
     Core::shutdown();
 
     return 0;

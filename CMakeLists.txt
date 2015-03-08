@@ -52,6 +52,7 @@ add_executable(TopDown src/Utils.cpp
 					   src/Math/Matrix3.cpp
 					   src/Math/Matrix4.cpp
 					   src/Math/Quaternion.cpp
+					   src/Filesystem/Xml/pugixml.cpp
 					   src/Filesystem/Assets/AssetManager.cpp
 					   src/Filesystem/ConfigFile.cpp
 					   src/Filesystem/Configuration.cpp

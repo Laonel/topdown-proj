@@ -21,6 +21,10 @@ public:
 
 	static bool isWindowOpen();
 
+	static void display();
+
+	static void clear(const sf::Color& c = sf::Color::Black);
+
 private:
 
 	static sf::RenderWindow* s_wnd;

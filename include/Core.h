@@ -25,6 +25,8 @@ public:
 
 	static bool isInit();
 
+	static bool shouldQuit();
+
 	static void handleEvent();
 
 	static void update(const sf::Time& dt);
@@ -34,6 +36,8 @@ public:
 private:
 
 	static bool s_initialised;
+
+	static bool s_shouldClose;
 
 };
 

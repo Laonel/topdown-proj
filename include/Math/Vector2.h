@@ -25,6 +25,12 @@ public:
 	{
 	}
 
+	inline Vector2(const sf::Vector2f& v) :
+		x(v.x),
+		y(v.y)
+	{
+	}
+
 	inline explicit Vector2(const float scaler) :
 		x(scaler),
 		y(scaler)
@@ -47,6 +53,11 @@ public:
 		x(r[0]),
 		y(r[1])
 	{
+	}
+
+	static sf::Vector2f toSFVec2(const Vector2& v)
+	{
+		return sf::Vector2f(v.x, v.y);
 	}
 
 	inline void swap(Vector2& other)
@@ -333,6 +344,13 @@ public:
 		return x * v.y - y * v.x;
 	}
 
+	inline float crossProduct(const Vector2& b, const Vector2& c) const
+	{
+		Vector2 ba = *this - b;
+		Vector2 bc = c - b;
+		return (ba.x * bc.y - ba.y * bc.x);
+	}
+
 	inline Vector2 randomDeviant(float angle) const
 	{
 		angle *= (rand() / (float)(RAND_MAX)) * TWO_PI;
@@ -385,6 +403,11 @@ public:
 			angle = (Radian)(TWO_PI - angle.valueRadians());
 
 		return angle;
+	}
+
+	inline Radian angle()
+	{
+		return Radian(std::atan2(x, y));
 	}
 
 	static const Vector2 Zero;

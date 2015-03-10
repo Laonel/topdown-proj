@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cmath>
 
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <string>

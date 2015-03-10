@@ -23,6 +23,16 @@ if(Boost_FOUND)
 	set(LIBS ${LIBS} ${Boost_LIBRARIES})
 endif()
 
+# Link ZLIB
+find_package(ZLIB REQUIRED)
+
+if (ZLIB_FOUND)
+	include_directories(${ZLIB_INCLUDE_DIRS})
+	set(LIBS ${LIBS} ${ZLIB_LIBRARIES})
+elseif (NOT ZLIB_FOUND)
+	set(ZLIB_ROOT "" CACHE PATH "zlib top-level directory")
+endif()
+
 # Link SFML library
 find_package(SFML COMPONENTS graphics window system audio)
 include_directories(${SFML_INCLUDE_DIR})
@@ -58,6 +68,11 @@ add_executable(TopDown src/Utils.cpp
 					   src/Filesystem/Configuration.cpp
 					   src/Physics/PhysicsManager.cpp
 					   src/Video/VideoManager.cpp
+					   src/Scene/Map/DebugShape.cpp
+					   src/Scene/Map/MapObject.cpp
+					   src/Scene/Map/MapLayer.cpp
+					   src/Scene/Map/QuadTreeNode.cpp
+					   src/Scene/Map/MapLoader.cpp
 					   src/Scene/Component.cpp
 					   src/Scene/GameObject.cpp
 					   src/Scene/Scene.cpp

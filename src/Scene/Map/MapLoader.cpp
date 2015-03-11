@@ -53,6 +53,7 @@ bool MapLoader::load(const std::string& map)
 		std::string name = currentNode.name();
 		if (name == "layer")
 		{
+			PRINT_DEBUG << "Calling _parseLayer()..." << std::endl;
 			if (!(m_mapLoaded = _parseLayer(currentNode)))
 			{
 				_unload();
@@ -61,6 +62,7 @@ bool MapLoader::load(const std::string& map)
 		}
 		else if (name == "imageLayer")
 		{
+			PRINT_DEBUG << "Calling _parseImageLayer()..." << std::endl;
 			if (!(m_mapLoaded = _parseImageLayer(currentNode)))
 			{
 				_unload();
@@ -69,6 +71,7 @@ bool MapLoader::load(const std::string& map)
 		}
 		else if (name == "objectgroup")
 		{
+			PRINT_DEBUG << "Calling _parseObjectGroup()..." << std::endl;
 			if (!(m_mapLoaded = _parseObjectGroup(currentNode)))
 			{
 				_unload();
@@ -713,7 +716,7 @@ bool MapLoader::_parseObjectGroup(const pugi::xml_node& groupNode)
 		}
 
 		// parse object node property values
-		if (pugi::xml_node propertiesNode = propertiesNode.child("property"))
+		if (pugi::xml_node propertiesNode = objectNode.child("properties"))
 		{
 			pugi::xml_node propertyNode = propertiesNode.child("property");
 			while (propertyNode)

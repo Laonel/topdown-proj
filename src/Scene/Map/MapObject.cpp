@@ -213,7 +213,7 @@ void MapObject::createSegments()
 	if (m_shape != Polyline) // close shape
 		m_polySegs.push_back(Segment(*(m_polypoints.end() - 1), *m_polypoints.begin()));
 
-	PRINT_ERROR << "Added " << m_polySegs.size() << " segments to Map Object" << std::endl;
+	PRINT_DEBUG << "Added " << m_polySegs.size() << " segments to Map Object" << std::endl;
 }
 
 bool MapObject::convex() const
